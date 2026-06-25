@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Style Guide</title>
+    <title>Stellar Planets Style Guide</title>
     <style>
       * {
         box-sizing: border-box;
@@ -14,7 +14,8 @@
         padding: 24px;
         font-family: Arial, sans-serif;
         line-height: 1.5;
-        background-color: #f5f5f5;
+        background-color: #050c1a;
+        color: #e8f0ff;
       }
 
       main {
@@ -23,8 +24,8 @@
       }
 
       section {
-        background-color: #ffffff;
-        border: 1px solid #dddddd;
+        background-color: #111d34;
+        border: 1px solid rgba(255, 255, 255, 0.1);
         padding: 16px;
         margin-bottom: 16px;
       }
@@ -35,36 +36,38 @@
       }
 
       .bg-primary {
-        background-color: #667eea;
+        background-color: #0d2340;
       }
 
       .bg-secondary {
-        background-color: #764ba2;
+        background-color: #5fb7ff;
       }
 
       button {
-        background-color: #667eea;
-        color: #ffffff;
+        background-color: #5fb7ff;
+        color: #05101f;
         border: none;
         padding: 10px 14px;
       }
 
       button:hover {
-        background-color: #5568d3;
+        background-color: #3aa5ff;
       }
 
       input,
       textarea {
         width: 100%;
         padding: 8px;
-        border: 1px solid #cccccc;
+        border: 1px solid #2f4a7a;
         margin-bottom: 12px;
+        background-color: #0b1a33;
+        color: #edf5ff;
       }
 
       .card {
-        border: 1px solid #dddddd;
+        border: 1px solid rgba(255, 255, 255, 0.14);
         padding: 12px;
-        background-color: #fafafa;
+        background-color: #111d34;
       }
 
       .card h3,
@@ -86,7 +89,7 @@
       }
 
       footer {
-        color: #666666;
+        color: #a8b8d7;
         font-size: 14px;
       }
     </style>
@@ -94,21 +97,21 @@
   <body>
     <main>
       <header>
-        <h1>Style Guide</h1>
-        <p>This page shows the basic style for our upcoming web app.</p>
+        <h1>Stellar Planets Style Guide</h1>
+        <p>This page shows the color and layout ideas for the space-themed planet explorer app.</p>
       </header>
 
       <section>
         <b>Color Palette</b>
-        <p>Use one main color and one secondary color.</p>
+        <p>Use a deep space blue with a bright sky accent for the planet explorer theme.</p>
         <div class="row">
           <div>
             <div class="swatch bg-primary"></div>
-            <p>Primary: #667eea</p>
+            <p>Primary: #0d2340</p>
           </div>
           <div>
             <div class="swatch bg-secondary"></div>
-            <p>Secondary: #764ba2</p>
+            <p>Secondary: #5fb7ff</p>
           </div>
         </div>
       </section>
@@ -118,15 +121,14 @@
         <p>Heading text is larger than body text.</p>
         <h1>Example Heading 1</h1>
         <p>
-          This is regular paragraph text. Keep body text simple and easy to
-          read.
+          This is regular paragraph text. Keep body text simple and easy to read.
         </p>
       </section>
 
       <section>
         <b>Button</b>
-        <p>Use one primary button style for key actions.</p>
-        <button>Primary Button</button>
+        <p>Use one bright button style for key actions like exploring planets.</p>
+        <button>Explore</button>
       </section>
 
       <section>
@@ -142,22 +144,22 @@
 
       <section>
         <b>Card Example</b>
-        <p>Cards group related content together.</p>
+        <p>Cards group planet or landing information in a clear way.</p>
         <div class="card-grid">
           <div class="card">
-            <h3>Card One</h3>
-            <p>This is a basic card with a title and short description.</p>
+            <h3>Planet</h3>
+            <p>Use cards to show the planet name, a short summary, and a picture.</p>
           </div>
           <div class="card">
-            <h3>Card Two</h3>
-            <p>This is a second card with the same simple structure.</p>
+            <h3>Landing Site</h3>
+            <p>Landing cards can show the location and a short note about exploration.</p>
           </div>
           <div class="card">
             <img
-              src="web-app/data/images/coffee-corner.jpg"
+              src="https://picsum.photos/seed/planet/300/180"
               alt="Example Image" />
-            <h3>Card Three</h3>
-            <p>This is a third card that completes the grid example.</p>
+            <h3>Surface View</h3>
+            <p>Include one image so the card feels like a small planet preview.</p>
           </div>
         </div>
       </section>

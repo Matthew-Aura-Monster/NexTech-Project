@@ -1,13 +1,12 @@
-# Specification: [Your App Idea Name]
+# Specification: [Stellar Planets]
 
-App description: [Write a one or two sentences describing what your app does and who it’s for.]
+App description: [My app is going to be for people interested in planets or our solar system, allowing people to go on planets and move around like google maps. It'll have information there on things like landings, etc.]
 
 ## Style and Theme
 
-[Describe the look and feel of your app.] 
+[It will be an almost overwhelming feeling at the start, showing the entirity of Earth, but not so overwhelming that it bothers people. Just enough to stand out. But you can look through each planet of the solar system and they'll have basic information, maybe stats, and a google view (where you can go and move around). It will feel interesting, and it's focusing heavily on interactions with the website's environment to keep user retention. ] 
 
-Overall mood:
-Examples: fun and playful, calm and professional, bold and energetic, etc.
+Overall mood: Energetic and impactful
 
 Use the *style-guide.html* for details on styling -- fonts, colors, and layout.
 
@@ -15,7 +14,7 @@ Use the *style-guide.html* for details on styling -- fonts, colors, and layout.
 
 ### Story 1 (most important)
 
-[Write 1-2 sentences. Who is using the app, what do they want to do, and what do they see when it works? Write it like you are describing it to a friend.]
+People interested in the solar system or planets will be visiting the website, and they want info on the planets/landings or want to get a close view of explored regions on the planets. When it works, the user will have a basic understanding and knowledge on the planet and landing, and will be able to explore part of the surface (if available). This will function like google maps, except it will have pop ups you can read when you get close to them.
 
 ---
 

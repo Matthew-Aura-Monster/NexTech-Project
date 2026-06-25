@@ -1,8 +1,8 @@
 export default {
   name: 'navbar-component',
   template: /* html */ `
-    <nav class="navbar sticky-top bg-white border-bottom px-3">
-      <span class="navbar-brand mb-0 h1"><i class="bi bi-bootstrap-fill me-2"></i>Web App Starter</span>
+    <nav class="navbar sticky-top bg-dark border-bottom px-3">
+      <span class="navbar-brand mb-0 h1"><i class="bi bi-globe2 me-2"></i>Stellar Planets</span>
 
       <div class="ms-auto d-flex gap-2">
         <router-link class="btn btn-outline-primary btn-sm" to="/">

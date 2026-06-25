@@ -1,5 +1,49 @@
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  color: #edf5ff;
+  background: radial-gradient(circle at top, #10294f 0%, #050b18 55%, #01040a 100%);
+}
+
+.navbar {
+  background-color: rgba(5, 13, 26, 0.96);
+}
+
+.navbar-brand,
+.navbar a {
+  color: #c8e8ff !important;
+}
+
+.btn-outline-primary {
+  color: #d1e8ff;
+  border-color: rgba(145, 203, 255, 0.7);
+}
+
+.btn-outline-primary:hover,
+.btn-primary,
+.btn-primary:focus {
+  background-color: rgba(112, 186, 255, 0.18);
+  border-color: #6ab6ff;
+  color: #ffffff;
+}
+
+.card,
+.alert {
+  background-color: rgba(10, 23, 46, 0.94);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #edf5ff;
+}
+
+.card-title,
+.lead,
+.text-muted,
+small {
+  color: #d8e9ff;
+}
+
 .collection-card-image {
-  height: 180px;
+  height: 190px;
 }
 
 .collection-description {
@@ -11,5 +55,5 @@
 }
 
 .item-detail-image {
-  max-height: 320px;
+  max-height: 360px;
 }
