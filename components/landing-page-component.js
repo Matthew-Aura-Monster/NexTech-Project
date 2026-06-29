@@ -1,3 +1,5 @@
+import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.module.js';
+
 export default {
   name: 'landing-page-component',
   template: /* html */ `
@@ -18,7 +20,7 @@ export default {
 
             <div class="col-10">
               <div class="text-center">
-                <div ref="threeRoot" class="mx-auto rounded shadow" style="width: 100%; max-width: 650px; height: 340px; border: 1px solid rgba(255,255,255,0.2); background: radial-gradient(circle at center, #142141 0%, #04070f 70%);"></div>
+                <div ref="threeRoot" class="mx-auto rounded shadow" style="width: 100%; max-width: 980px; height: 560px; border: 1px solid rgba(255,255,255,0.2); background: radial-gradient(circle at center, #142141 0%, #04070f 70%);"></div>
 
                 <h2 class="h3 mt-3 mb-2" style="color: #e0e0ff;">{{ currentPlanet ? currentPlanet.name : 'Loading...' }}</h2>
                 <p class="text-light mb-3">{{ currentPlanet ? currentPlanet.description : 'Loading planet data...' }}</p>
@@ -52,6 +54,10 @@ export default {
       currentIndex: 2,
       isAnimating: false,
       previousIndex: 2,
+    };
+  },
+  created() {
+    this._threeState = {
       scene: null,
       camera: null,
       renderer: null,
@@ -75,10 +81,10 @@ export default {
   },
   methods: {
     nextPlanet() {
-      if (this.isAnimating || this.planets.length === 0) return;
+      if (this.isAnimating || this.planets.length === 0 || this.currentIndex >= this.planets.length - 1) return;
       this.isAnimating = true;
       this.previousIndex = this.currentIndex;
-      this.currentIndex = (this.currentIndex + 1) % this.planets.length;
+      this.currentIndex += 1;
       this.updatePlanetView();
 
       setTimeout(() => {
@@ -86,10 +92,10 @@ export default {
       }, 600);
     },
     prevPlanet() {
-      if (this.isAnimating || this.planets.length === 0) return;
+      if (this.isAnimating || this.planets.length === 0 || this.currentIndex <= 0) return;
       this.isAnimating = true;
       this.previousIndex = this.currentIndex;
-      this.currentIndex = (this.currentIndex - 1 + this.planets.length) % this.planets.length;
+      this.currentIndex -= 1;
       this.updatePlanetView();
 
       setTimeout(() => {
@@ -97,47 +103,61 @@ export default {
       }, 600);
     },
     updatePlanetView() {
-      if (!this.planetGroup) return;
-      this.targetGroupX = -this.currentIndex * 4.4;
-      this.targetGroupRotation = this.currentIndex * 0.35;
-      this.targetBackgroundSpeed = 0.004;
-      if (this.transitionTimer) {
-        window.clearTimeout(this.transitionTimer);
+      if (!this._threeState.planetGroup) return;
+      this._threeState.targetGroupX = -this.currentIndex * 13.5;
+      this._threeState.targetGroupRotation = 0;
+      this._threeState.targetBackgroundSpeed = 0.0004;
+      if (this._threeState.transitionTimer) {
+        window.clearTimeout(this._threeState.transitionTimer);
       }
-      this.transitionTimer = window.setTimeout(() => {
-        this.targetBackgroundSpeed = 0.001;
-      }, 700);
+      this._threeState.transitionTimer = window.setTimeout(() => {
+        this._threeState.targetBackgroundSpeed = 0.00008;
+      }, 900);
     },
     setupScene() {
       const root = this.$refs.threeRoot;
-      if (!root || this.renderer) return;
+      if (!root || this._threeState.renderer) return;
+      if (typeof THREE === 'undefined') {
+        console.error('Three.js did not load correctly for the landing page scene.');
+        return;
+      }
 
-      this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color(0x02040d);
+      this._threeState.scene = new THREE.Scene();
+      this._threeState.scene.background = new THREE.Color(0x02040d);
 
-      this.camera = new THREE.PerspectiveCamera(45, root.clientWidth / root.clientHeight, 0.1, 100);
-      this.camera.position.set(0, 1.4, 12);
+      this._threeState.camera = new THREE.PerspectiveCamera(40, root.clientWidth / root.clientHeight, 0.1, 280);
+      this._threeState.camera.position.set(0, 2.4, 25);
+      this._threeState.camera.lookAt(0, 0, 0);
 
-      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      this.renderer.setSize(root.clientWidth, root.clientHeight);
-      root.appendChild(this.renderer.domElement);
-      this.textureLoader = new THREE.TextureLoader();
+      this._threeState.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      this._threeState.renderer.outputEncoding = THREE.sRGBEncoding;
+      this._threeState.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      this._threeState.renderer.toneMappingExposure = 1.1;
+      this._threeState.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this._threeState.renderer.setSize(root.clientWidth, root.clientHeight);
+      root.appendChild(this._threeState.renderer.domElement);
+      this._threeState.textureLoader = new THREE.TextureLoader();
+      this._threeState.textureLoader.setCrossOrigin('anonymous');
 
-      const ambientLight = new THREE.AmbientLight(0x8aa0ff, 0.95);
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-      directionalLight.position.set(8, 6, 10);
-      const pointLight = new THREE.PointLight(0xffffff, 1.6, 120);
-      pointLight.position.set(6, 8, 10);
-      this.scene.add(ambientLight, directionalLight, pointLight);
+      const ambientLight = new THREE.AmbientLight(0x96b5ff, 0.92);
+      const hemiLight = new THREE.HemisphereLight(0x8899ff, 0x110022, 0.4);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+      directionalLight.position.set(14, 9, 15);
+      const fillLight = new THREE.DirectionalLight(0x8899ff, 0.82);
+      fillLight.position.set(-10, -4, -12);
+      const backLight = new THREE.DirectionalLight(0x7788cc, 0.38);
+      backLight.position.set(-14, 5, -8);
+      const pointLight = new THREE.PointLight(0xffffff, 0.9, 160);
+      pointLight.position.set(4, 8, 8);
+      this._threeState.scene.add(ambientLight, hemiLight, directionalLight, fillLight, backLight, pointLight);
 
-      this.spaceGroup = new THREE.Group();
-      this.scene.add(this.spaceGroup);
+      this._threeState.spaceGroup = new THREE.Group();
+      this._threeState.scene.add(this._threeState.spaceGroup);
 
       const nebulaGeometry = new THREE.SphereGeometry(140, 32, 24);
       const nebulaMaterial = new THREE.MeshBasicMaterial({ color: 0x060b19, side: THREE.BackSide, transparent: true, opacity: 0.95 });
       const nebula = new THREE.Mesh(nebulaGeometry, nebulaMaterial);
-      this.spaceGroup.add(nebula);
+      this._threeState.spaceGroup.add(nebula);
 
       const starGeometry = new THREE.BufferGeometry();
       const starPositions = [];
@@ -147,106 +167,120 @@ export default {
         starPositions.push((Math.random() - 0.5) * 220);
       }
       starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
-      const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0.95 });
+      const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.035, transparent: true, opacity: 0.45 });
       const stars = new THREE.Points(starGeometry, starMaterial);
-      this.spaceGroup.add(stars);
+      this._threeState.spaceGroup.add(stars);
 
-      this.planetGroup = new THREE.Group();
-      this.scene.add(this.planetGroup);
+      this._threeState.planetGroup = new THREE.Group();
+      this._threeState.scene.add(this._threeState.planetGroup);
 
       this.animateScene();
     },
     buildPlanetMeshes() {
-      if (!this.planetGroup) return;
+      if (!this._threeState.planetGroup) return;
 
-      this.planetMeshes.forEach((mesh) => {
-        this.planetGroup.remove(mesh);
+      this._threeState.planetMeshes.forEach((mesh) => {
+        this._threeState.planetGroup.remove(mesh);
         mesh.geometry.dispose();
         mesh.material.dispose();
       });
-      this.planetMeshes = [];
+      this._threeState.planetMeshes = [];
 
       this.planets.forEach((planet, index) => {
         const planetKey = String(planet.id || '').toLowerCase();
         const color = this.getPlanetColor(planet.name);
-        const radius = 0.7 + (index % 3) * 0.12;
-        const geometry = new THREE.SphereGeometry(radius, 32, 32);
-        const texture = this.planetTextureCache[planetKey] || null;
-        const material = new THREE.MeshStandardMaterial({
-          color,
+        const radius = 1.9 + (index % 3) * 0.42;
+        const geometry = new THREE.SphereGeometry(radius, 64, 64);
+        const texture = this._threeState.planetTextureCache[planetKey] || null;
+        if (texture) {
+          texture.encoding = THREE.sRGBEncoding;
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+        }
+
+        const materialColor = texture ? 0xffffff : color;
+        const material = new THREE.MeshPhongMaterial({
+          color: materialColor,
           map: texture,
-          roughness: 0.8,
-          metalness: 0.12,
+          shininess: 10,
+          specular: 0x888888,
+          emissive: 0x0c1018,
+          emissiveIntensity: 0.02,
         });
         const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(index * 4.4, 0, 0);
+        mesh.position.set(index * 13.5, 0, 0);
         mesh.castShadow = true;
-        this.planetGroup.add(mesh);
-        this.planetMeshes.push(mesh);
+        this._threeState.planetGroup.add(mesh);
+        this._threeState.planetMeshes.push(mesh);
 
-        const atmosphereGeometry = new THREE.SphereGeometry(radius * 1.08, 24, 24);
+        const atmosphereGeometry = new THREE.SphereGeometry(radius * 1.015, 40, 40);
         const atmosphereMaterial = new THREE.MeshBasicMaterial({
           color: this.getAtmosphereColor(planet.name),
           transparent: true,
-          opacity: 0.18,
-          side: THREE.BackSide,
+          opacity: 0.02,
+          side: THREE.FrontSide,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
         });
         const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
         atmosphere.position.copy(mesh.position);
-        this.planetGroup.add(atmosphere);
-        this.planetMeshes.push(atmosphere);
+        this._threeState.planetGroup.add(atmosphere);
+        this._threeState.planetMeshes.push(atmosphere);
 
         if (planetKey === 'saturn') {
-          const ringGeometry = new THREE.RingGeometry(radius * 1.45, radius * 2.2, 64);
-          const ringMaterial = new THREE.MeshBasicMaterial({
+          const ringGeometry = new THREE.RingGeometry(radius * 1.45, radius * 2.5, 120);
+          const ringMaterial = new THREE.MeshStandardMaterial({
             color: 0xe2d094,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.58,
             side: THREE.DoubleSide,
+            roughness: 0.75,
+            metalness: 0.1,
           });
           const ring = new THREE.Mesh(ringGeometry, ringMaterial);
           ring.position.copy(mesh.position);
           ring.rotation.x = -Math.PI / 2.3;
-          this.planetGroup.add(ring);
-          this.planetMeshes.push(ring);
+          this._threeState.planetGroup.add(ring);
+          this._threeState.planetMeshes.push(ring);
         }
       });
 
       this.updatePlanetView();
     },
     loadPlanetTextures() {
-      if (!this.textureLoader) {
+      if (!this._threeState.textureLoader) {
         return Promise.resolve();
       }
 
       const textureUrls = {
-        mercury: 'https://images-assets.nasa.gov/image/PIA16853/PIA16853~orig.jpg',
-        venus: 'https://images-assets.nasa.gov/image/PIA00271/PIA00271~orig.jpg',
-        earth: 'https://images-assets.nasa.gov/image/PIA03375/PIA03375~orig.jpg',
-        mars: 'https://images-assets.nasa.gov/image/PIA00131/PIA00131~orig.jpg',
-        jupiter: 'https://images-assets.nasa.gov/image/PIA02863/PIA02863~orig.jpg',
-        saturn: 'https://images-assets.nasa.gov/image/PIA03550/PIA03550~orig.jpg',
-        uranus: 'https://images-assets.nasa.gov/image/PIA18182/PIA18182~orig.jpg',
-        neptune: 'https://images-assets.nasa.gov/image/PIA01492/PIA01492~orig.jpg',
-        pluto: 'https://images-assets.nasa.gov/image/PIA19948/PIA19948~orig.jpg',
+        mercury: 'https://threejs.org/examples/textures/planets/mercury.jpg',
+        venus: 'https://threejs.org/examples/textures/planets/venus.jpg',
+        earth: 'https://threejs.org/examples/textures/planets/earthmap1k.jpg',
+        mars: 'https://threejs.org/examples/textures/planets/mars_1k_color.jpg',
+        jupiter: 'https://threejs.org/examples/textures/planets/jupiter.jpg',
+        saturn: 'https://threejs.org/examples/textures/planets/saturn.jpg',
+        uranus: 'https://threejs.org/examples/textures/planets/uranus.jpg',
+        neptune: 'https://threejs.org/examples/textures/planets/neptune.jpg',
+        pluto: 'https://threejs.org/examples/textures/planets/pluto.jpg',
       };
 
       return Promise.all(Object.entries(textureUrls).map(([key, url]) => new Promise((resolve) => {
-        this.textureLoader.load(
+        this._threeState.textureLoader.load(
           url,
           (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.encoding = THREE.sRGBEncoding;
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
-            if (this.renderer) {
-              texture.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
+            if (this._threeState.renderer) {
+              texture.anisotropy = this._threeState.renderer.capabilities.getMaxAnisotropy();
             }
-            this.planetTextureCache[key] = texture;
+            this._threeState.planetTextureCache[key] = texture;
             resolve();
           },
           undefined,
           () => {
-            this.planetTextureCache[key] = null;
+            console.error('Failed to load planet texture:', key, url);
+            this._threeState.planetTextureCache[key] = null;
             resolve();
           },
         );
@@ -282,84 +316,88 @@ export default {
     },
     animateScene() {
       const tick = () => {
-        if (this.planetGroup) {
-          this.planetGroup.position.x += (this.targetGroupX - this.planetGroup.position.x) * 0.08;
-          this.planetGroup.rotation.y += (this.targetGroupRotation - this.planetGroup.rotation.y) * 0.06;
+        if (this._threeState.planetGroup) {
+          this._threeState.planetGroup.position.x += (this._threeState.targetGroupX - this._threeState.planetGroup.position.x) * 0.08;
+          this._threeState.planetGroup.rotation.y += (this._threeState.targetGroupRotation - this._threeState.planetGroup.rotation.y) * 0.06;
         }
 
-        if (this.spaceGroup) {
-          this.backgroundSpeed += (this.targetBackgroundSpeed - this.backgroundSpeed) * 0.08;
-          this.spaceGroup.rotation.y += this.backgroundSpeed;
-          this.spaceGroup.rotation.x = Math.sin(performance.now() * 0.00003) * 0.08;
+        if (this._threeState.spaceGroup) {
+          this._threeState.backgroundSpeed += (this._threeState.targetBackgroundSpeed - this._threeState.backgroundSpeed) * 0.08;
+          this._threeState.spaceGroup.rotation.y += this._threeState.backgroundSpeed;
+          this._threeState.spaceGroup.rotation.x = Math.sin(performance.now() * 0.000015) * 0.03;
         }
 
-        if (this.renderer && this.scene && this.camera) {
-          this.renderer.render(this.scene, this.camera);
+        if (this._threeState.renderer && this._threeState.scene && this._threeState.camera) {
+          this._threeState.renderer.render(this._threeState.scene, this._threeState.camera);
         }
 
-        this.animationFrameId = window.requestAnimationFrame(tick);
+        this._threeState.animationFrameId = window.requestAnimationFrame(tick);
       };
 
       tick();
     },
     handleResize() {
       const root = this.$refs.threeRoot;
-      if (!root || !this.camera || !this.renderer) return;
+      if (!root || !this._threeState.camera || !this._threeState.renderer) return;
 
-      this.camera.aspect = root.clientWidth / root.clientHeight;
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(root.clientWidth, root.clientHeight);
+      this._threeState.camera.aspect = root.clientWidth / root.clientHeight;
+      this._threeState.camera.updateProjectionMatrix();
+      this._threeState.renderer.setSize(root.clientWidth, root.clientHeight);
     },
     cleanupScene() {
-      if (this.animationFrameId) {
-        window.cancelAnimationFrame(this.animationFrameId);
+      if (this._threeState.animationFrameId) {
+        window.cancelAnimationFrame(this._threeState.animationFrameId);
       }
 
-      this.planetMeshes.forEach((mesh) => {
+      this._threeState.planetMeshes.forEach((mesh) => {
         mesh.geometry.dispose();
         mesh.material.dispose();
       });
 
-      Object.values(this.planetTextureCache).forEach((texture) => {
+      Object.values(this._threeState.planetTextureCache).forEach((texture) => {
         texture?.dispose();
       });
-      this.planetTextureCache = {};
+      this._threeState.planetTextureCache = {};
 
-      if (this.renderer) {
-        this.renderer.dispose();
-        this.renderer.domElement.remove();
+      if (this._threeState.renderer) {
+        this._threeState.renderer.dispose();
+        this._threeState.renderer.domElement.remove();
       }
 
-      if (this.transitionTimer) {
-        window.clearTimeout(this.transitionTimer);
+      if (this._threeState.transitionTimer) {
+        window.clearTimeout(this._threeState.transitionTimer);
       }
 
-      this.scene = null;
-      this.camera = null;
-      this.renderer = null;
-      this.planetGroup = null;
-      this.spaceGroup = null;
-      this.planetMeshes = [];
+      this._threeState.scene = null;
+      this._threeState.camera = null;
+      this._threeState.renderer = null;
+      this._threeState.planetGroup = null;
+      this._threeState.spaceGroup = null;
+      this._threeState.planetMeshes = [];
     },
     async loadPlanets() {
       try {
         const response = await fetch('items-template.csv');
         const csv = await response.text();
-        const lines = csv.trim().split('\n');
 
-        this.planets = lines
-          .slice(1)
-          .map((line) => {
-            const values = line.split(',');
-            return {
-              id: values[0],
-              name: values[1],
-              description: values[2],
-              category: values[3],
-              image_url: values[4],
-              location: values[5],
-            };
-          })
+        const parsed = await new Promise((resolve, reject) => {
+          Papa.parse(csv, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (result) => resolve(result),
+            error: (error) => reject(error),
+          });
+        });
+
+        this.planets = parsed.data
+          .map((row) => ({
+            id: String(row.id || '').trim(),
+            name: String(row.name || '').trim(),
+            description: String(row.description || '').trim(),
+            category: String(row.category || '').trim(),
+            image_url: String(row.image_url || '').trim(),
+            location: String(row.location || '').trim(),
+          }))
           .filter((item) => item.category === 'Planet' || item.category === 'Dwarf Planet')
           .sort((a, b) => {
             const order = ['mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
