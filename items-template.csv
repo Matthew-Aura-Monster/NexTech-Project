@@ -1,9 +1,12 @@
 id,name,description,category,image_url,location
-mercury,Mercury,"The smallest rocky planet with cratered terrain and a bright sunrise near the Sun.",Planet,https://picsum.photos/seed/mercury/800/600,Inner solar system
-venus,Venus,"A thick-clouded world with active volcanoes and a hot orange atmosphere.",Planet,https://picsum.photos/seed/venus/800/600,Inner solar system
-earth,Earth,"Our home planet with oceans, weather, and many explored landing sites.",Planet,https://picsum.photos/seed/earth/800/600,Sol system
-moon,Moon,"Earth's natural satellite with historic Apollo landing sites and quiet crater fields.",Moon,https://picsum.photos/seed/moon/800/600,Earth orbit
-apollo-11,Apollo 11 Landing Site,"First human landing site on the Moon, with a view across the Sea of Tranquility.",Landing Site,https://picsum.photos/seed/apollo/800/600,Sea of Tranquility
-mars,Mars,"The red planet with dusty plains, polar ice caps, and rover exploration paths.",Planet,https://picsum.photos/seed/mars/800/600,Mars surface
-jupiter,Jupiter,"A giant gas planet with stormy clouds, glowing bands, and a bright Great Red Spot.",Planet,https://picsum.photos/seed/jupiter/800/600,Outer solar system
-saturn,Saturn,"A ringed gas giant known for its wide icy rings and many orbiting moons.",Planet,https://picsum.photos/seed/saturn/800/600,Outer solar system
+mercury,Mercury,"The smallest rocky planet with cratered terrain and a bright sunrise near the Sun.",Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Mercury_in_true_color.jpg/1024px-Mercury_in_true_color.jpg,Inner solar system
+venus,Venus,"A thick-clouded world with active volcanoes and a hot orange atmosphere.",Planet,https://upload.wikimedia.org/wikipedia/commons/e/e5/Venus-real_color.jpg,Inner solar system
+earth,Earth,"Our home planet with oceans, weather, and many explored landing sites.",Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Earth_icon.svg/1024px-Earth_icon.svg.png,Sol system
+moon,Moon,"Earth's natural satellite with historic Apollo landing sites and quiet crater fields.",Moon,https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/1024px-FullMoon2010.jpg,Earth orbit
+apollo-11,Apollo 11 Landing Site,"First human landing site on the Moon, with a view across the Sea of Tranquility.",Landing Site,https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Buzz_Aldrin_Self_Portrait_Apollo_11.jpg/600px-Buzz_Aldrin_Self_Portrait_Apollo_11.jpg,Sea of Tranquility
+mars,Mars,"The red planet with dusty plains, polar ice caps, and rover exploration paths.",Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mars_-_August_30_2021_-_Flickr_-_NASA_Images.png/1024px-Mars_-_August_30_2021_-_Flickr_-_NASA_Images.png,Mars surface
+jupiter,Jupiter,"A giant gas planet with stormy clouds, glowing bands, and a bright Great Red Spot.",Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Jupiter.jpg/1024px-Jupiter.jpg,Outer solar system
+saturn,Saturn,"A ringed gas giant known for its wide icy rings and many orbiting moons.",Planet,https://upload.wikimedia.org/wikipedia/commons/c/c7/Saturn-real_color.jpg,Outer solar system
+uranus,Uranus,"An ice giant that rotates on its side with a pale blue-green atmosphere.",Planet,https://upload.wikimedia.org/wikipedia/commons/3/3d/Uranus2.jpg,Outer solar system
+neptune,Neptune,"A deep blue ice giant with the strongest winds in the solar system.",Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Neptune_-_14_Nov_1998_-_HST.jpg/1024px-Neptune_-_14_Nov_1998_-_HST.jpg,Outer solar system
+pluto,Pluto,"A dwarf planet on the edge of the solar system with frozen nitrogen and icy mountains.",Dwarf Planet,https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Pluto_in_True_Color_2x_JPEG_Voyager_1.jpg/1024px-Pluto_in_True_Color_2x_JPEG_Voyager_1.jpg,Kuiper belt
