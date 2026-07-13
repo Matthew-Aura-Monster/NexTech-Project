@@ -1,9 +1,0 @@
-id,name,description,category,image_url,location
-mercury,Mercury,"The smallest rocky planet with cratered terrain and a bright sunrise near the Sun.",Planet,https://picsum.photos/seed/mercury/800/600,Inner solar system
-venus,Venus,"A thick-clouded world with active volcanoes and a hot orange atmosphere.",Planet,https://picsum.photos/seed/venus/800/600,Inner solar system
-earth,Earth,"Our home planet with oceans, weather, and many explored landing sites.",Planet,https://picsum.photos/seed/earth/800/600,Sol system
-moon,Moon,"Earth's natural satellite with historic Apollo landing sites and quiet crater fields.",Moon,https://picsum.photos/seed/moon/800/600,Earth orbit
-apollo-11,Apollo 11 Landing Site,"First human landing site on the Moon, with a view across the Sea of Tranquility.",Landing Site,https://picsum.photos/seed/apollo/800/600,Sea of Tranquility
-mars,Mars,"The red planet with dusty plains, polar ice caps, and rover exploration paths.",Planet,https://picsum.photos/seed/mars/800/600,Mars surface
-jupiter,Jupiter,"A giant gas planet with stormy clouds, glowing bands, and a bright Great Red Spot.",Planet,https://picsum.photos/seed/jupiter/800/600,Outer solar system
-saturn,Saturn,"A ringed gas giant known for its wide icy rings and many orbiting moons.",Planet,https://picsum.photos/seed/saturn/800/600,Outer solar system
