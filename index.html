@@ -154,14 +154,46 @@
         let keys = {};
         let asteroids = [];
         let gameLoopId;
+        // 8-Bit Retro Space Audio Generator Engine Module
+        function playLaserSound() {
+            if (typeof AudioContext === "undefined" && typeof webkitAudioContext === "undefined") return;
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth'; // Retro crisp vintage hum wave
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function playExplosionSound() {
+            if (typeof AudioContext === "undefined" && typeof webkitAudioContext === "undefined") return;
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle'; // Deep booming bass sound wave
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(10, audioCtx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        }
 
         // Listeners for keyboard controls input mapping registers
         window.addEventListener('keydown', (e) => keys[e.key] = true);
         window.addEventListener('keyup', (e) => keys[e.key] = false);
-        canvas.addEventListener('click', () => { if(!gameActive) startGame(); });
+        overlay.addEventListener('click', () => { if(!gameActive) startGame(); });
 
-        function startGame() {
-            overlay.style.display = 'none';
+
+function startGame() {
+    playLaserSound(); // Triggers a crisp retro laser zap sound upon clicking start!
+    overlay.style.display = 'none';
             gameActive = true;
             score = 0;
             asteroids = [];
@@ -186,17 +218,38 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Move ship left/right smoothly
-            if (keys['ArrowLeft'] && shipX > 15) shipX -= 5;
-            if (keys['ArrowRight'] && shipX < canvas.width - 15) shipX += 5;
+            // SAFETY BOUNDING CLAMP: Keeps your retro starship locked inside your viewport canvas borders!
+            if (keys['ArrowLeft'] && shipX > (shipWidth / 2) + 5) shipX -= 5;
+            if (keys['ArrowRight'] && shipX < canvas.width - (shipWidth / 2) - 5) shipX += 5;
 
-            // Render Retro Triangle Starship
-            ctx.fillStyle = '#38bdf8';
+
+                        // RENDER: Authentic 8-Bit Line Vector Arcade Starship Chassis
+            ctx.strokeStyle = '#38bdf8'; // Glowing neon space cyan hull lines
+            ctx.lineWidth = 2;
+            ctx.fillStyle = '#010c32'; // Deep cozy core hull fills
             ctx.beginPath();
+            // Nose Cone apex point
             ctx.moveTo(shipX, canvas.height - shipHeight - 10);
-            ctx.lineTo(shipX - shipWidth/2, canvas.height - 10);
-            ctx.lineTo(shipX + shipWidth/2, canvas.height - 10);
+            // Left Wing Stabilizer tip
+            ctx.lineTo(shipX - shipWidth / 2, canvas.height - 10);
+            // Inward Engine Bay indentation groove point
+            ctx.lineTo(shipX, canvas.height - 15);
+            // Right Wing Stabilizer tip
+            ctx.lineTo(shipX + shipWidth / 2, canvas.height - 10);
             ctx.closePath();
             ctx.fill();
+            ctx.stroke();
+
+            // Retro Thruster Flame Injection node (Animates dynamically when moving!)
+            if (keys['ArrowLeft'] || keys['ArrowRight'] || Math.random() > 0.4) {
+                ctx.strokeStyle = '#ef4444'; // Electric propulsion exhaust orange-red
+                ctx.beginPath();
+                ctx.moveTo(shipX - 4, canvas.height - 14);
+                ctx.lineTo(shipX, canvas.height - 5 - (Math.random() * 8)); // Dynamic flame flicker tracking
+                ctx.lineTo(shipX + 4, canvas.height - 14);
+                ctx.stroke();
+            }
+
 
             // Handle Asteroids logic loop tracks
             createAsteroid();
@@ -204,14 +257,28 @@
                 let a = asteroids[i];
                 a.y += a.speed;
 
-                // Render Meteor Circle particles
-                ctx.fillStyle = 'rgba(226, 232, 240, 0.4)';
-                ctx.strokeStyle = '#94a3b8';
-                ctx.lineWidth = 1;
+                // RENDER: Jagged Geometric Retro Space Rock Meteor Particles
+                ctx.strokeStyle = '#94a3b8'; // Cold slate-gray vector lines
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)'; // Heavy mineral core shadow fills
+                ctx.lineWidth = 1.5;
                 ctx.beginPath();
-                ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+                
+                // Procedurally loops around 8 coordinates to generate custom craggy craters edge vectors!
+                const pointsCount = 8;
+                for (let j = 0; j < pointsCount; j++) {
+                    const angle = (j / pointsCount) * Math.PI * 2;
+                    // Adds a subtle, fixed structural noise warp step to shape real jagged craters
+                    const cragOffset = 1 + (Math.sin(j * 3 + a.x) * 0.15); 
+                    const prX = a.x + Math.cos(angle) * a.size * cragOffset;
+                    const prY = a.y + Math.sin(angle) * a.size * cragOffset;
+                    
+                    if (j === 0) ctx.moveTo(prX, prY);
+                    else ctx.lineTo(prX, prY);
+                }
+                ctx.closeVertex || ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
+
 
                 // Point scoring tracking node checks
                 if (a.y > canvas.height) {
@@ -232,6 +299,9 @@
         }
 
         function endGame() {
+    playExplosionSound(); // Triggers a deep crunchy 8-bit crash blast when you hit space debris!
+    gameActive = false;
+
             gameActive = false;
             cancelAnimationFrame(gameLoopId);
             if (score > highScore) {
