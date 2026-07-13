@@ -83,8 +83,166 @@
 
         </div>
     </section>
+    <!-- 4. Split Segment: About Me Data Deck & Asteroid Mini-Game Deck -->
+    <section id="about-me-section" class="split-dashboard-deck">
+        <div class="split-grid-container">
+            
+            <!-- Left Wing: Cozy Profile Node -->
+            <div class="profile-data-card">
+                <div class="card-interior-padding">
+                    <div class="profile-header-meta">
+                        <div class="avatar-frame">
+                            <!-- Placeholder avatar: replaced seamlessly with an image file later! -->
+                            <div class="avatar-placeholder">MT</div>
+                        </div>
+                        <div class="title-meta-group">
+                            <h4>MATTHEW // APPLICANT</h4>
+                            <p class="role-tag">Systems & Graphics Developer</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bio-text-zone">
+                        <p>Welcome to the digital deck of <strong>ASTRONOMICAL.SIM</strong>. I am a passionate developer focused on building interactive virtual environments, real-time physics calibrations, and fluid user experiences.</p>
+                        <p>This deployment project acts as a live exploration portfolio deck, connecting deep system logic optimization frames straight into clear web-native shell structures.</p>
+                    </div>
 
-        <!-- This space is clean, empty, and ready to hold your 3D view and asteroid game later -->
+                    <!-- Contact Details Console Row -->
+                    <div class="contact-links-console">
+                        <div class="detail-row"><span>EMAIL:</span> <strong>matthew@example.com</strong></div>
+                        <div class="detail-row"><span>GITHUB:</span> <strong>://github.com</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Wing: Retro-Cozy Interactive Asteroid Dodge Engine Card -->
+            <div class="game-control-card">
+                <div class="game-card-header">
+                    <h5>SYSTEM_DEFENSE_GAME // MINI_MODULE</h5>
+                    <div class="score-display-deck">
+                        <span>SCORE: <strong id="current-score">0</strong></span>
+                        <span>HI-SCORE: <strong id="high-score">0</strong></span>
+                    </div>
+                </div>
+                
+                <!-- The Interactive HTML5 Canvas Render Window Screen Frame -->
+                <div class="canvas-viewport-wrapper">
+                    <canvas id="asteroidGameCanvas" width="450" height="300"></canvas>
+                    <div id="game-start-overlay" class="game-ui-overlay">
+                        <p class="orbitron-text">CLICK TO INITIALIZE THRUSTERS</p>
+                        <p class="sub-text-hint">Use Left & Right Arrow keys to steer your ship</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. Interactive JavaScript Mini-Game Logic Script Engine -->
+    <script>
+        const canvas = document.getElementById('asteroidGameCanvas');
+        const ctx = canvas.getContext('2d');
+        const overlay = document.getElementById('game-start-overlay');
+        const scoreElement = document.getElementById('current-score');
+        const hiScoreElement = document.getElementById('high-score');
+
+        let score = 0;
+        let highScore = 0;
+        let gameActive = false;
+        let shipX = canvas.width / 2;
+        const shipWidth = 20;
+        const shipHeight = 25;
+        let keys = {};
+        let asteroids = [];
+        let gameLoopId;
+
+        // Listeners for keyboard controls input mapping registers
+        window.addEventListener('keydown', (e) => keys[e.key] = true);
+        window.addEventListener('keyup', (e) => keys[e.key] = false);
+        canvas.addEventListener('click', () => { if(!gameActive) startGame(); });
+
+        function startGame() {
+            overlay.style.display = 'none';
+            gameActive = true;
+            score = 0;
+            asteroids = [];
+            shipX = canvas.width / 2;
+            scoreElement.innerText = score;
+            gameLoop();
+        }
+
+        function createAsteroid() {
+            if (Math.random() < 0.04 && asteroids.length < 8) {
+                asteroids.push({
+                    x: Math.random() * canvas.width,
+                    y: -10,
+                    size: Math.random() * 15 + 10,
+                    speed: Math.random() * 3 + 2
+                });
+            }
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Move ship left/right smoothly
+            if (keys['ArrowLeft'] && shipX > 15) shipX -= 5;
+            if (keys['ArrowRight'] && shipX < canvas.width - 15) shipX += 5;
+
+            // Render Retro Triangle Starship
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.moveTo(shipX, canvas.height - shipHeight - 10);
+            ctx.lineTo(shipX - shipWidth/2, canvas.height - 10);
+            ctx.lineTo(shipX + shipWidth/2, canvas.height - 10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Handle Asteroids logic loop tracks
+            createAsteroid();
+            for (let i = asteroids.length - 1; i >= 0; i--) {
+                let a = asteroids[i];
+                a.y += a.speed;
+
+                // Render Meteor Circle particles
+                ctx.fillStyle = 'rgba(226, 232, 240, 0.4)';
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Point scoring tracking node checks
+                if (a.y > canvas.height) {
+                    asteroids.splice(i, 1);
+                    score += 10;
+                    scoreElement.innerText = score;
+                }
+
+                // Precision Circle-Triangle Bounding Collision Checks
+                let distX = Math.abs(a.x - shipX);
+                let distY = Math.abs(a.y - (canvas.height - 20));
+                if (distX < (a.size + shipWidth/4) && distY < (a.size + shipHeight/2)) {
+                    endGame();
+                }
+            }
+
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+        function endGame() {
+            gameActive = false;
+            cancelAnimationFrame(gameLoopId);
+            if (score > highScore) {
+                highScore = score;
+                hiScoreElement.innerText = highScore;
+            }
+            overlay.style.display = 'flex';
+            overlay.innerHTML = '<p class="orbitron-text" style="color: #ef4444;">SYSTEM DAMAGE // CRASH</p><p class="sub-text-hint">Click display viewport frame to restart modules</p>';
+        }
+    </script>
+
     </div>
 
 </body>
